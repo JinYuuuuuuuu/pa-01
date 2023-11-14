@@ -102,3 +102,17 @@ void CardBST::printInOrder() const {
 
 void CardBST::printInOrderHelper(Node* node) const {
     if (node != nullptr) {
+        printInOrderHelper(node->left);
+        std::cout << node->card.suit << " " << node->card.value << std::endl;
+        printInOrderHelper(node->right);
+    }
+}
+
+// Destroy the tree
+void CardBST::destroyTree(Node* node) {
+    if (node != nullptr) {
+        destroyTree(node->left);
+        destroyTree(node->right);
+        delete node;
+    }
+}
