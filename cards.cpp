@@ -1,11 +1,16 @@
 #include "cards.h"
 
-// Implement the overloaded operators for Card
+// Card comparison considering suit and value
 bool Card::operator<(const Card& other) const {
-    if (suit == other.suit) {
-        return value < other.value; // You need to handle card values properly
+    if (suit != other.suit) {
+        static const std::string suitOrder = "cdsh";
+        return suitOrder.find(suit) < suitOrder.find(other.suit);
     }
-    return suit < other.suit;
+
+    if (value == other.value) return false;
+
+    static const std::string valueOrder = "a234567891jqk";  // '1' represents '10'
+    return valueOrder.find(value[0]) < valueOrder.find(other.value[0]);
 }
 
 bool Card::operator>(const Card& other) const {
@@ -34,6 +39,7 @@ void CardBST::insertHelper(Node*& node, const Card& card) {
     } else if (card > node->card) {
         insertHelper(node->right, card);
     }
+    // If the card is equal, no insertion (assuming no duplicates)
 }
 
 // Find a card
@@ -96,5 +102,3 @@ void CardBST::printInOrder() const {
 
 void CardBST::printInOrderHelper(Node* node) const {
     if (node != nullptr) {
-        printInOrderHelper(node->left);
-        std::cout << node->card.suit << " " << node->card.value << std::endl;
