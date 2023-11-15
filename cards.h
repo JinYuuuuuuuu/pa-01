@@ -1,4 +1,5 @@
 //cards.h
+//Ruijie Tao
 #ifndef CARDS_H
 #define CARDS_H
 
@@ -43,7 +44,6 @@ class CardBST {
         bool find(const Card& card) const;
         void remove(const Card& card);
         Card findSuccessor(const Card& card) const;
-        Card findPredecesspr(const Card& card) const;
         Card findPredecessor(const Card& card) const;
         void printInOrder() const;
         Card findMin() const;
@@ -51,12 +51,11 @@ class CardBST {
 
     private:
         Node* root;
-
         void insertHelper(Node*& node, const Card& card);
         Node* removeHelper(Node* node, const Card& card);
-        Node* findMin(Node* node) const;
-        Node* findMax(Node* node) const;
         void printInOrderHelper(Node* node) const;
+        Node* findMinHelper(Node* node) const;
+        Node* findMaxHelper(Node* node) const;
         void destroyTree(Node* node);
 };
 

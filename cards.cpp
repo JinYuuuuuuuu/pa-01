@@ -1,4 +1,5 @@
 //cards.cpp
+//Hechenjin Yu, Ruijie Tao
 #include "cards.h"
 
 using namespace std;
@@ -87,7 +88,7 @@ Node* CardBST::removeHelper(Node* node, const Card& card) {
             return temp;
         }
 
-        Node* temp = findMin(node->right);
+        Node* temp = findMinHelper(node->right);
         node->card = temp->card;
         node->right = removeHelper(node->right, temp->card);
     }
@@ -95,7 +96,7 @@ Node* CardBST::removeHelper(Node* node, const Card& card) {
 }
 
 Card CardBST::findMin() const {
-    Node* node = findMin(root);
+    Node* node = findMinHelper(root);
     if (node) {
         return node->card;
     }
@@ -104,14 +105,14 @@ Card CardBST::findMin() const {
 
 // Public interface to find the maximum card
 Card CardBST::findMax() const {
-    Node* node = findMax(root);
+    Node* node = findMaxHelper(root);
     if (node) {
         return node->card;
     }
     return Card(); // Return an empty card if the BST is empty
 }
 
-Node* CardBST::findMin(Node* node) const {
+Node* CardBST::findMinHelper(Node* node) const {
     Node* current = node;
     while (current && current->left != nullptr) {
         current = current->left;
@@ -119,7 +120,7 @@ Node* CardBST::findMin(Node* node) const {
     return current;
 }
 
-Node* CardBST::findMax(Node* node) const {
+Node* CardBST::findMaxHelper(Node* node) const {
     Node* current = node;
     while (current && current->right != nullptr) {
         current = current->right;
@@ -148,7 +149,7 @@ Card CardBST::findSuccessor(const Card& card) const {
 
     // Step 2: If the node has a right child, find the minimum in the right subtree
     if (current->right != nullptr) {
-        successor = findMin(current->right);
+        successor = findMinHelper(current->right);
     }
 
     // If there is no successor, return an empty card
@@ -180,7 +181,7 @@ Card CardBST::findPredecessor(const Card& card) const {
 
     // Step 2: If the node has a left child, find the maximum in the left subtree
     if (current->left != nullptr) {
-        predecessor = findMax(current->left);
+        predecessor = findMaxHelper(current->left);
     }
 
     // If there is no predecessor, return an empty card
