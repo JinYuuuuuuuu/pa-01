@@ -1,8 +1,11 @@
+//cards.h
 #ifndef CARDS_H
 #define CARDS_H
 
 #include <iostream>
 #include <string>
+
+using namespace std;
 
 // Card struct
 struct Card {
