@@ -95,6 +95,7 @@ int main(int argc, char** argv) {
 
     bool aliceTurn = true;
     playTurn(aliceBST, bobBST, currAlice, currBob, aliceTurn);
+    cout << endl;
 
     // Game over, print remaining cards
 
@@ -102,6 +103,7 @@ int main(int argc, char** argv) {
     
     cout << "Alice's cards:" << endl;
     aliceBST.printInOrder();
+    cout << endl;
     cout << "Bob's cards:" << endl;
     bobBST.printInOrder();
     
