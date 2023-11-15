@@ -90,9 +90,34 @@ Node* CardBST::removeHelper(Node* node, const Card& card) {
     return node;
 }
 
+Card CardBST::findMin() const {
+    Node* node = findMin(root);
+    if (node) {
+        return node->card;
+    }
+    return Card(); // Return an empty card if the BST is empty
+}
+
+// Public interface to find the maximum card
+Card CardBST::findMax() const {
+    Node* node = findMax(root);
+    if (node) {
+        return node->card;
+    }
+    return Card(); // Return an empty card if the BST is empty
+}
+
 Node* CardBST::findMin(Node* node) const {
     Node* current = node;
     while (current && current->left != nullptr) {
+        current = current->left;
+    }
+    return current;
+}
+
+Node* CardBST::findMax(Node* node) const {
+    Node* current = node;
+    while (current && current->right != nullptr) {
         current = current->left;
     }
     return current;

@@ -9,10 +9,10 @@ using namespace std;
 
 // Card struct
 struct Card {
-    std::string suit;
-    std::string value;
+    string suit;
+    string value;
 
-    Card(std::string s, std::string v) : suit(s), value(v) {}
+    Card(string s = "", string v = "") : suit(s), value(v) {}
 
     bool operator<(const Card& other) const;
     bool operator>(const Card& other) const;
@@ -30,23 +30,26 @@ struct Node {
 
 // Binary Search Tree for Cards
 class CardBST {
-public:
-    CardBST() : root(nullptr) {}
-    ~CardBST();
+    public:
+        CardBST() : root(nullptr) {}
+        ~CardBST();
 
-    void insert(const Card& card);
-    bool find(const Card& card) const;
-    void remove(const Card& card);
-    void printInOrder() const;
+        void insert(const Card& card);
+        bool find(const Card& card) const;
+        void remove(const Card& card);
+        void printInOrder() const;
+        Card findMin() const;
+        Card findMax() const;
 
-private:
-    Node* root;
+    private:
+        Node* root;
 
-    void insertHelper(Node*& node, const Card& card);
-    Node* removeHelper(Node* node, const Card& card);
-    Node* findMin(Node* node) const;
-    void printInOrderHelper(Node* node) const;
-    void destroyTree(Node* node);
+        void insertHelper(Node*& node, const Card& card);
+        Node* removeHelper(Node* node, const Card& card);
+        Node* findMin(Node* node) const;
+        Node* findMax(Node* node) const;
+        void printInOrderHelper(Node* node) const;
+        void destroyTree(Node* node);
 };
 
 #endif // CARDS_H

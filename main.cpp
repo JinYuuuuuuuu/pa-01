@@ -1,4 +1,3 @@
-//main.cpp
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -12,11 +11,40 @@ Card parseCard(const string& line) {
     char suit;
     string value;
     iss >> suit >> value;
+    // Handling for '10' which is represented by two characters
+    if (value == "1") {
+        char nextChar;
+        iss >> nextChar;
+        value += nextChar;
+    }
     return Card(string(1, suit), value);
 }
 
+bool playTurn(CardBST& playerBST, CardBST& opponentBST, bool isAlice) {
+    if (isAlice) {
+        // Alice's turn: find and remove the smallest card from her BST that matches one in Bob's BST
+        Card card = playerBST.findMin();
+        if (!card.suit.empty() && opponentBST.find(card)) {
+            cout << "Alice picked matching card " << card.suit << " " << card.value << endl;
+            playerBST.remove(card);
+            opponentBST.remove(card);
+            return true;
+        }
+    } else {
+        // Bob's turn: find and remove the largest card from his BST that matches one in Alice's BST
+        Card card = playerBST.findMax();
+        if (!card.suit.empty() && opponentBST.find(card)) {
+            cout << "Bob picked matching card " << card.suit << " " << card.value << endl;
+            playerBST.remove(card);
+            opponentBST.remove(card);
+            return true;
+        }
+    }
+    return false;
+}
+
 int main(int argc, char** argv) {
-    if (argc < 3) {
+    if (argc != 3) {
         cout << "Please provide 2 file names" << endl;
         return 1;
     }
@@ -25,8 +53,12 @@ int main(int argc, char** argv) {
     ifstream cardFile2(argv[2]);
     string line;
 
-    if (cardFile1.fail() || cardFile2.fail()) {
-        cout << "Could not open file " << argv[2];
+    if (cardFile1.fail()) {
+        cout << "Could not open file " << argv[1] << endl;
+        return 1;
+    }
+    if (cardFile2.fail()) {
+        cout << "Could not open file " << argv[2] << endl;
         return 1;
     }
 
@@ -45,38 +77,12 @@ int main(int argc, char** argv) {
     cardFile2.close();
 
     // The game begins
-    bool aliceTurn = true; // Alice starts the game
+    bool aliceTurn = true;
     bool cardFound;
-    
     do {
-        cardFound = false; // Reset flag for each iteration
-
-        if (aliceTurn) {
-            // Alice's turn: iterate from smallest to largest card
-            for (const auto& card : aliceBST) {
-                if (bobBST.find(card)) {
-                    cout << "Alice picked matching card " << card << endl;
-                    aliceBST.remove(card);
-                    bobBST.remove(card);
-                    cardFound = true;
-                    break; // Only one card per turn
-                }
-            }
-        } else {
-            // Bob's turn: iterate from largest to smallest card
-            for (auto it = bobBST.rbegin(); it != bobBST.rend(); ++it) {
-                if (aliceBST.find(*it)) {
-                    cout << "Bob picked matching card " << *it << endl;
-                    aliceBST.remove(*it);
-                    bobBST.remove(*it);
-                    cardFound = true;
-                    break; // Only one card per turn
-                }
-            }
-        }
-
+        cardFound = playTurn(aliceBST, bobBST, aliceTurn);
         aliceTurn = !aliceTurn; // Switch turns
-    } while (cardFound); // Continue while matches are found
+    } while (cardFound);
 
     // Game over, print remaining cards
     cout << "Alice's cards:" << endl;
