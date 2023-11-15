@@ -11,37 +11,49 @@ Card parseCard(const string& line) {
     char suit;
     string value;
     iss >> suit >> value;
-    // Handling for '10' which is represented by two characters
-    if (value == "1") {
+    if (value == "1") { // Assuming '1' represents '10'
         char nextChar;
-        iss >> nextChar;
+        iss >> nextChar; // To get the '0' character
         value += nextChar;
     }
     return Card(string(1, suit), value);
 }
 
-bool playTurn(CardBST& playerBST, CardBST& opponentBST, bool isAlice) {
-    if (isAlice) {
-        // Alice's turn: find and remove the smallest card from her BST that matches one in Bob's BST
-        Card card = playerBST.findMin();
-        if (!card.suit.empty() && opponentBST.find(card)) {
-            cout << "Alice picked matching card " << card.suit << " " << card.value << endl;
-            playerBST.remove(card);
-            opponentBST.remove(card);
-            return true;
+void playTurn(CardBST& playerBST, CardBST& opponentBST, Card& currAlice, Card& currBob, bool isAlice) {
+
+    while (!currAlice.isEmpty() && !currBob.isEmpty()){
+        Card tempAlice = Card();
+        Card tempBob = Card();
+        if (isAlice){
+            if (opponentBST.find(currAlice)){
+              cout << "Alice picked matching card " << currAlice.suit << " " << currAlice.value << endl;
+              tempAlice = currAlice;
+              currAlice = playerBST.findSuccessor(currAlice);
+              playerBST.remove(tempAlice);
+              opponentBST.remove(tempAlice);
+              isAlice = false;
+            }
+            else{
+              currAlice = playerBST.findSuccessor(currAlice);
+            }
         }
-    } else {
-        // Bob's turn: find and remove the largest card from his BST that matches one in Alice's BST
-        Card card = playerBST.findMax();
-        if (!card.suit.empty() && opponentBST.find(card)) {
-            cout << "Bob picked matching card " << card.suit << " " << card.value << endl;
-            playerBST.remove(card);
-            opponentBST.remove(card);
-            return true;
+
+        else{
+            if (playerBST.find(currBob)){
+                cout << "Bob picked matching card " << currBob.suit << " " << currBob.value << endl;
+                tempBob = currBob;
+                currBob = opponentBST.findPredecessor(currBob);
+                playerBST.remove(tempBob);
+                opponentBST.remove(tempBob);
+                isAlice = true;
+            }
+            else{
+              currBob = opponentBST.findPredecessor(currBob);
+            }
         }
     }
-    return false;
 }
+
 
 int main(int argc, char** argv) {
     if (argc != 3) {
@@ -62,7 +74,8 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    CardBST aliceBST, bobBST;
+    CardBST aliceBST;
+    CardBST bobBST;
 
     // Read cards for Alice
     while (getline(cardFile1, line) && !line.empty()) {
@@ -77,18 +90,21 @@ int main(int argc, char** argv) {
     cardFile2.close();
 
     // The game begins
+    Card currAlice = aliceBST.findMin();
+    Card currBob = bobBST.findMax();
+
     bool aliceTurn = true;
-    bool cardFound;
-    do {
-        cardFound = playTurn(aliceBST, bobBST, aliceTurn);
-        aliceTurn = !aliceTurn; // Switch turns
-    } while (cardFound);
+    playTurn(aliceBST, bobBST, currAlice, currBob, aliceTurn);
 
     // Game over, print remaining cards
+
+
+    
     cout << "Alice's cards:" << endl;
     aliceBST.printInOrder();
     cout << "Bob's cards:" << endl;
     bobBST.printInOrder();
+    
 
     return 0;
 }

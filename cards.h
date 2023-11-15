@@ -17,6 +17,11 @@ struct Card {
     bool operator<(const Card& other) const;
     bool operator>(const Card& other) const;
     bool operator==(const Card& other) const;
+    bool operator!=(const Card& other) const;
+
+    bool isEmpty() const {
+        return suit.empty() && value.empty();
+    }
 };
 
 // Node struct for BST
@@ -37,6 +42,9 @@ class CardBST {
         void insert(const Card& card);
         bool find(const Card& card) const;
         void remove(const Card& card);
+        Card findSuccessor(const Card& card) const;
+        Card findPredecesspr(const Card& card) const;
+        Card findPredecessor(const Card& card) const;
         void printInOrder() const;
         Card findMin() const;
         Card findMax() const;

@@ -24,6 +24,10 @@ bool Card::operator==(const Card& other) const {
     return suit == other.suit && value == other.value;
 }
 
+bool Card::operator!=(const Card& other) const {
+    return suit != other.suit || value != other.value;
+}
+
 // CardBST Destructor
 CardBST::~CardBST() {
     destroyTree(root);
@@ -118,9 +122,73 @@ Node* CardBST::findMin(Node* node) const {
 Node* CardBST::findMax(Node* node) const {
     Node* current = node;
     while (current && current->right != nullptr) {
-        current = current->left;
+        current = current->right;
     }
     return current;
+}
+
+Card CardBST::findSuccessor(const Card& card) const {
+    Node* current = root;
+    Node* successor = nullptr;
+
+    // Step 1: Find the node (if it exists) in the BST
+    while (current != nullptr && current->card != card) {
+        if (card < current->card) {
+            successor = current;
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+    }
+
+    // If the node doesn't exist in the tree, return an empty card
+    if (current == nullptr) {
+        return Card();
+    }
+
+    // Step 2: If the node has a right child, find the minimum in the right subtree
+    if (current->right != nullptr) {
+        successor = findMin(current->right);
+    }
+
+    // If there is no successor, return an empty card
+    if (successor == nullptr) {
+        return Card();
+    }
+
+    return successor->card;
+}
+
+Card CardBST::findPredecessor(const Card& card) const {
+    Node* current = root;
+    Node* predecessor = nullptr;
+
+    // Step 1: Find the node (if it exists) in the BST
+    while (current != nullptr && current->card != card) {
+        if (card > current->card) {
+            predecessor = current;
+            current = current->right;
+        } else {
+            current = current->left;
+        }
+    }
+
+    // If the node doesn't exist in the tree, return an empty card
+    if (current == nullptr) {
+        return Card();
+    }
+
+    // Step 2: If the node has a left child, find the maximum in the left subtree
+    if (current->left != nullptr) {
+        predecessor = findMax(current->left);
+    }
+
+    // If there is no predecessor, return an empty card
+    if (predecessor == nullptr) {
+        return Card();
+    }
+
+    return predecessor->card;
 }
 
 // Print in-order
