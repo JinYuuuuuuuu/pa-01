@@ -1,5 +1,5 @@
 //cards.h
-//Ruijie Tao
+//Hechenjin Yu, Ruijie Tao
 #ifndef CARDS_H
 #define CARDS_H
 
